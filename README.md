@@ -1,54 +1,157 @@
-# AI System Builder Full
+# File: full_ai_system_builder.py
+import os
+import time
+import zipfile
+import streamlit as st
 
-**A fully autonomous AI system simulating a complete software company, capable of building complex software projects automatically from user ideas.**  
+# ================== إعداد المشروع ==================
+PROJECT_NAME = "AI_System_Builder_Full"
+LANGUAGES = ["Python", "JavaScript", "SQL"]  # اللغات المدعومة
+FOLDERS = ["backend", "frontend", "ai_modules", "database", "tasks", "docs", "build"]
 
-This project represents a conceptual AI platform where multiple AI agents work together to analyze requests, design system architecture, break the project into tasks, generate example code, test, debug, integrate, and optimize the final product.
+if not os.path.exists(PROJECT_NAME):
+    os.mkdir(PROJECT_NAME)
+    for folder in FOLDERS:
+        os.mkdir(os.path.join(PROJECT_NAME, folder))
 
----
+# ================== واجهة Streamlit ==================
+st.set_page_config(page_title="AI System Builder Full", layout="wide")
+st.title("🤖 AI System Builder Full")
+st.write("""
+Simulate a **fully autonomous AI software company** that builds complex systems automatically.
+- Supports multiple languages (Python, JS, SQL)
+- Generates real files and code
+- Full development pipeline with testing and optimization
+- Download project as ZIP
+""")
 
-## 🚀 Main Features
+user_idea = st.text_area("Enter your project idea:", "Build a cybersecurity OS similar to Kali Linux")
+run_button = st.button("Run Full Project Simulation")
+download_button = st.button("Download Full Project as ZIP")
 
-- **Autonomous AI Team Simulation**:  
-  - Executive Agent – manages projects and priorities  
-  - Request Analysis Agent – analyzes user ideas and complexity  
-  - System Architect Agent – designs architecture and modules  
-  - Task Planner Agent – breaks the project into tasks  
-  - Developer Agents – generate code for backend, frontend, AI modules, and database  
-  - Testing Agents – run automated tests  
-  - Debugging Agents – fix detected issues  
-  - Integration Agent – merge modules  
-  - Optimization Agent – improve performance and structure  
+# ================== وظيفة تحميل المشروع ==================
+def zip_project():
+    zipf = zipfile.ZipFile(f"{PROJECT_NAME}.zip", "w", zipfile.ZIP_DEFLATED)
+    for root, dirs, files in os.walk(PROJECT_NAME):
+        for file in files:
+            zipf.write(os.path.join(root, file),
+                       arcname=os.path.relpath(os.path.join(root, file), PROJECT_NAME))
+    zipf.close()
+    return f"{PROJECT_NAME}.zip"
 
-- **Multi-Language Support**: Python, JavaScript, SQL  
-- **Full Development Pipeline Visualization**  
-- **Real File Generation**: project folders and files created for each module  
-- **Download Project**: get the final project as a ZIP file  
-- **Supports Complex Projects**: operating systems (like Kali Linux), SaaS platforms, AI tools, data analysis platforms, web applications
+# ================== وكلاء AI ==================
+class ExecutiveAgent:
+    def manage_project(self):
+        st.info("🧠 Executive Agent: Managing project priorities and resources...")
+        time.sleep(1)
 
----
+class RequestAnalysisAgent:
+    def analyze_request(self, idea):
+        st.info(f"📊 Request Analysis Agent: Analyzing user idea -> '{idea}'")
+        time.sleep(1)
+        modules = ["backend", "frontend", "ai_modules", "database"]
+        complexity = "High" if "OS" in idea or "SaaS" in idea else "Medium"
+        return {"type": "Project", "modules": modules, "complexity": complexity, "languages": LANGUAGES}
 
-## 🖥 Application Interface
+class SystemArchitectAgent:
+    def design_architecture(self, analysis):
+        st.info(f"🏗 System Architect Agent: Designing architecture for modules {analysis['modules']}")
+        time.sleep(1)
+        architecture = {}
+        for idx, mod in enumerate(analysis['modules']):
+            architecture[mod] = {
+                "structure": f"{mod}_structure",
+                "language": analysis["languages"][idx % len(analysis["languages"])]
+            }
+        return architecture
 
-- **Idea Input Panel** – Enter any project idea  
-- **AI Analysis Panel** – Shows project type, complexity, estimated modules, technology stack  
-- **System Architecture Panel** – Displays module architecture visually  
-- **Task Planner Panel** – Shows planned tasks for each module  
-- **Code Generation Panel** – Displays generated code examples for each module  
-- **AI Agent Activity Panel** – Simulates all AI agents working step by step  
-- **Development Pipeline Visualization** – Shows the full project lifecycle
+class TaskPlannerAgent:
+    def plan_tasks(self, architecture):
+        st.info("📝 Task Planner Agent: Planning tasks based on architecture...")
+        time.sleep(1)
+        tasks = []
+        for mod in architecture:
+            tasks.append(f"Develop {mod}")
+            tasks.append(f"Test {mod}")
+            tasks.append(f"Optimize {mod}")
+        return tasks
 
----
+class DeveloperAgent:
+    def develop_module(self, module, language):
+        st.info(f"💻 Developer Agent: Writing {language} code for {module}...")
+        time.sleep(1)
+        folder_path = os.path.join(PROJECT_NAME, module)
+        ext = {"Python": "py", "JavaScript": "js", "SQL": "sql"}.get(language, "txt")
+        filename = os.path.join(folder_path, f"{module}.{ext}")
+        with open(filename, "w") as f:
+            if language == "Python":
+                f.write(f"# {module} Python code\nprint('Running {module}')\n")
+            elif language == "JavaScript":
+                f.write(f"// {module} JavaScript code\nconsole.log('Running {module}');\n")
+            elif language == "SQL":
+                f.write(f"-- {module} SQL schema\nCREATE TABLE {module} (id INT PRIMARY KEY);\n")
+        return filename
 
-## ⚙️ How to Run
+class TestingAgent:
+    def test_module(self, filename):
+        st.info(f"✅ Testing Agent: Testing {filename}...")
+        time.sleep(1)
+        st.success(f"{filename} passed automated tests!")
 
-### Option 1: Online via Streamlit Cloud
-1. Go to [Streamlit Cloud](https://streamlit.io/cloud)  
-2. Link your GitHub repository containing `full_ai_system_builder.py`  
-3. Deploy the app  
-4. Enter your project idea → click **Run Full Project Simulation**  
-5. Explore generated files and download the final project  
+class DebuggingAgent:
+    def debug_module(self, filename):
+        st.info(f"🔧 Debugging Agent: Debugging {filename}...")
+        time.sleep(1)
+        st.success(f"{filename} debugged successfully!")
 
-### Option 2: Locally
-1. Install Python 3.10+ and Streamlit:
-```bash
-pip install streamlit
+class IntegrationAgent:
+    def integrate_modules(self, modules):
+        st.info("🔗 Integration Agent: Merging modules into final project...")
+        time.sleep(1)
+        st.success("All modules integrated successfully!")
+
+class OptimizationAgent:
+    def optimize_project(self):
+        st.info("⚡ Optimization Agent: Optimizing project performance and structure...")
+        time.sleep(1)
+        st.success("Project fully optimized!")
+
+# ================== تشغيل المحاكاة ==================
+if run_button:
+    exec_agent = ExecutiveAgent()
+    req_agent = RequestAnalysisAgent()
+    arch_agent = SystemArchitectAgent()
+    task_agent = TaskPlannerAgent()
+    dev_agent = DeveloperAgent()
+    test_agent = TestingAgent()
+    debug_agent = DebuggingAgent()
+    integ_agent = IntegrationAgent()
+    opt_agent = OptimizationAgent()
+
+    exec_agent.manage_project()
+    analysis = req_agent.analyze_request(user_idea)
+    architecture = arch_agent.design_architecture(analysis)
+    tasks = task_agent.plan_tasks(architecture)
+
+    st.subheader("🚀 Full Development Pipeline")
+    for mod, info in architecture.items():
+        file_created = dev_agent.develop_module(mod, info["language"])
+        test_agent.test_module(file_created)
+        debug_agent.debug_module(file_created)
+
+    integ_agent.integrate_modules(list(architecture.keys()))
+    opt_agent.optimize_project()
+
+    st.success("🎉 Full Project Simulation Completed Successfully!")
+
+    st.subheader("📂 Generated Project Files")
+    for folder in FOLDERS:
+        folder_path = os.path.join(PROJECT_NAME, folder)
+        files = os.listdir(folder_path)
+        st.write(f"{folder}: {files}")
+
+# ================== تحميل المشروع ==================
+if download_button:
+    zip_path = zip_project()
+    with open(zip_path, "rb") as f:
+        st.download_button("⬇ Download Full Project ZIP", f, file_name=zip_path)
