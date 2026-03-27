@@ -1,0 +1,16 @@
+httpx
+python-dotenv
+redis
+weaviate-client
+boto3
+google-cloud-storage
+pandas
+openpyxl
+moviepy
+qiskit
+web3
+selenium
+paho-mqtt
+mlflow
+requests
+aiohttp
